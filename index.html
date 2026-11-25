@@ -1,0 +1,214 @@
+S<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glee Club Member Checker</title>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css" />
+<script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght
+@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #26364a;
+      --navy-dark: #192638;
+      --blue: #a9dff2;
+      --blue-light: #e5f6fc;
+      --white: #ffffff;
+      --text: #243449;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 18px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 10%, rgba(169, 223, 242, 0.25), transparent 34%),
+        linear-gradient(145deg, #eaf8fc, #d4e7f0 48%, #b9cbd9);
+    }
+
+    .page {
+      width: min(100%, 460px);
+      text-align: center;
+    }
+
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(27px, 7vw, 36px);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin: 9px 0 28px;
+      color: #60758a;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .checker {
+      padding: 28px 25px 24px;
+      border: 1px solid #9bcfe2;
+      border-top: 5px solid var(--navy);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 35px rgba(38, 54, 74, 0.15);
+    }
+
+    .checker p {
+      margin: 0 0 19px;
+      color: #60758a;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    input {
+      width: 100%;
+      margin: 0 0 13px;
+      padding: 14px 15px;
+      border: 1px solid #c5d5df;
+      border-radius: 8px;
+      outline: none;
+      color: var(--text);
+      background: #f8fcfe;
+      font: inherit;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: #72bcd8;
+      box-shadow: 0 0 0 3px rgba(114, 188, 216, 0.2);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 3px;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--navy-dark);
+      background: var(--blue);
+      box-shadow: 0 4px 0 #78b9d1;
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #78b9d1;
+    }
+
+    #result {
+      min-height: 58px;
+      margin-top: 20px;
+      padding: 15px 17px;
+      border-left: 4px solid #78b9d1;
+      border-radius: 8px;
+      color: var(--navy);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 5px 16px rgba(38, 54, 74, 0.08);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    footer {
+      margin-top: 27px;
+      color: #647b8e;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 420px) {
+      .checker {
+        padding: 23px 18px 21px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="logo" aria-hidden="true">♪</div>
+    <h1>Glee Club</h1>
+    <div class="subtitle">Candidate Verification System</div>
+
+    <section class="checker">
+      <p>Enter your first and last name to check if you are a Glee Club member.</p>
+
+      <input id="first-name" type="text" placeholder="First Name" autocomplete="given-name">
+      <input id="last-name" type="text" placeholder="Last Name" autocomplete="family-name">
+
+      <button id="check-button" py-click="check_member">CHECK MEMBERSHIP</button>
+    </section>
+
+    <div id="result" aria-live="polite">
+      Your result will appear here.
+    </div>
+
+    <footer>GLEE CLUB · MEMBER CHECKER</footer>
+  </main>
+
+  <script type="py">
+from pyscript import document
+
+# Glee Club members
+club_members = [
+    "Santos Keiko",
+    "Kate Velo",
+    "Yna Sabulao",
+    "Mia Robles",
+    "Sophie Elis"
+]
+
+def check_member(event=None):
+    first_name = document.querySelector("#first-name").value.strip()
+    last_name = document.querySelector("#last-name").value.strip()
+    full_name = f"{first_name} {last_name}".strip()
+
+    # Check the name without being affected by capital or lowercase letters.
+    is_member = full_name.casefold() in [
+        "santos keiko", "kate velo", "yna sabulao", "mia robles", "sophie elis"
+    ]
+
+    # Dictionary lookup displays the correct message without if/else statements.
+    messages = {
+        "": "Please enter both your first name and last name.",
+        True: f"Congratulations, {full_name}! You are now part of the Glee Club. Yay!",
+        False: f"Sorry, {full_name}. Your name is not on the Glee Club members list. Thank you for participating."
+    }
+
+    result_message = messages.get(full_name, messages[is_member])
+    document.querySelector("#result").innerText = result_message
+
+  </script>
+
+
+</body>
+</html>
